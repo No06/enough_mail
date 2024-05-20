@@ -77,9 +77,15 @@ class DiscoverHelper {
   }
 
   /// Looks up domain referenced by the domain's DNS MX record
-  static Future<String?> discoverMxDomain(String domain) async {
-    final mxRecords =
-        await basic.DnsUtils.lookupRecord(domain, basic.RRecordType.MX);
+  static Future<String?> discoverMxDomain(
+    String domain, {
+    String? dnsApiUrl,
+  }) async {
+    final mxRecords = await basic.DnsUtils.lookupRecord(
+      domain,
+      basic.RRecordType.MX,
+      dnsApiUrl: dnsApiUrl,
+    );
     if (mxRecords == null || mxRecords.isEmpty) {
       //print('unable to read MX records for [$domain].');
       return null;

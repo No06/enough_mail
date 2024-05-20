@@ -22,9 +22,10 @@ class Discover {
   static Future<ClientConfig?> discover(
     String emailAddress, {
     bool forceSslConnection = false,
+    String? dnsApiUrl,
     bool isLogEnabled = false,
   }) async {
-    final config = await _discover(emailAddress, isLogEnabled);
+    final config = await _discover(emailAddress, isLogEnabled, dnsApiUrl);
     if (forceSslConnection && config != null) {
       final preferredIncomingImapServer = config.preferredIncomingImapServer;
       if (preferredIncomingImapServer != null &&
@@ -120,8 +121,9 @@ class Discover {
 
   static Future<ClientConfig?> _discover(
     String emailAddress,
-    bool isLogEnabled,
-  ) async {
+    bool isLogEnabled, [
+    String? dnsApiUrl,
+  ]) async {
     // [1] auto-discover from sub-domain,
     // compare: https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration
     final emailDomain = DiscoverHelper.getDomainFromEmail(emailAddress);
@@ -131,7 +133,10 @@ class Discover {
       isLogEnabled: isLogEnabled,
     );
     if (config == null) {
-      final mxDomain = await DiscoverHelper.discoverMxDomain(emailDomain);
+      final mxDomain = await DiscoverHelper.discoverMxDomain(
+        emailDomain,
+        dnsApiUrl: dnsApiUrl,
+      );
       _log('mxDomain for [$emailDomain] is [$mxDomain]', isLogEnabled);
       if (mxDomain != null && mxDomain != emailDomain) {
         config = await DiscoverHelper.discoverFromAutoConfigSubdomain(
