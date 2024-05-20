@@ -3,6 +3,7 @@ description: IMAP, POP3 and SMTP for email developers. Choose between a low
   level and a high level API for mailing. Parse and generate MIME messages.
   Discover email settings.
 version: 2.1.6
+publish_to: 'none'
 homepage: https://github.com/Enough-Software/enough_mail
 topics:
   - email
@@ -16,7 +17,9 @@ environment:
   sdk: '>=2.19.0 <4.0.0'
 
 dependencies:
-  basic_utils: ^5.6.1
+  basic_utils:
+    git:
+     url: https://github.com/No06/Dart-Basic-Utils
   collection: ^1.16.0
   crypto: ^3.0.0
   encrypt: ^5.0.0
